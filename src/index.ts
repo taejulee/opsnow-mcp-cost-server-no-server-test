@@ -23,8 +23,13 @@ async function readCostData(): Promise<any | null> {
       method: "log",
       params: {
         level: "info",
-        message: "Attempting to read cost data",
-        data: { filePath }
+        message: "Checking cost data file",
+        data: { 
+          filePath,
+          fileExists: await fs.access(filePath).then(() => true).catch(() => false),
+          currentDirectory: process.cwd(),
+          __dirname
+        }
       }
     }) + "\n");
     
@@ -41,7 +46,8 @@ async function readCostData(): Promise<any | null> {
         data: {
           error: error instanceof Error ? error.message : String(error),
           filePath: path.join(__dirname, "../data/cost.json"),
-          cwd: process.cwd()
+          cwd: process.cwd(),
+          __dirname
         }
       }
     }) + "\n");
@@ -60,9 +66,14 @@ server.tool(
 
     const data = await readCostData();
     if (!data || !data.Data) {
+      const filePath = path.join(__dirname, "../data/cost.json");
+      const fileExists = await fs.access(filePath).then(() => true).catch(() => false);
       return {
         content: [
-          { type: "text", text: path.join(__dirname, "../data/cost.json") + " Failed to load cost data" }
+          { 
+            type: "text", 
+            text: `File path: ${filePath}\nFile exists: ${fileExists}\nCurrent directory: ${process.cwd()}\n__dirname: ${__dirname}\nFailed to load cost data` 
+          }
         ],
       };
     }
