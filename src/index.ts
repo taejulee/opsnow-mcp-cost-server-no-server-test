@@ -17,12 +17,21 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 // Helper function for reading cost data from file
 async function readCostData(): Promise<any | null> {
   try {
-    const filePath = path.join(__dirname, "../data/cost.json");
+    // 현재 실행 중인 파일의 디렉토리에서 data 디렉토리를 찾음
+    const filePath = path.join(process.cwd(), "data/cost.json");
     const fileContent = await fs.readFile(filePath, 'utf-8');
     const data = JSON.parse(fileContent);
     return data;
   } catch (error) {
-    console.error("Error reading cost data from file:", error);
+    process.stderr.write(JSON.stringify({
+      jsonrpc: "2.0",
+      method: "log",
+      params: {
+        level: "error",
+        message: "Error reading cost data from file",
+        data: error instanceof Error ? error.message : String(error)
+      }
+    }) + "\n");
     return null;
   }
 }
