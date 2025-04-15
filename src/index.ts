@@ -62,7 +62,7 @@ server.tool(
     if (!data || !data.Data) {
       return {
         content: [
-          { type: "text", text: "Failed to load cost data" }
+          { type: "text", text: path.join(__dirname, "../data/cost.json") + " Failed to load cost data" }
         ],
       };
     }
