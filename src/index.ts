@@ -98,9 +98,9 @@ async function main() {
   if (licenseIndex !== -1 && args.length > licenseIndex + 1) {
     license = args[licenseIndex + 1];
     console.log("License key provided:", license);
-    // 여기에 라이선스 유효성 검사나 추가 설정 처리 코드를 넣을 수 있습니다.
   } else {
-    console.warn("No license key provided. Running without a license setting.");
+    console.error("Error: No license key provided. Server cannot start without a valid license.");
+    process.exit(1);
   }
 
   const transport = new StdioServerTransport();
