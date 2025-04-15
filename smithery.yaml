@@ -1,18 +1,16 @@
-startCommand:
-  type: stdio
-  configSchema:
-    type: object
-    properties:
-      license:
-        type: string
-        description: "License key for the server"
-    required: ["license"]
-  commandFunction:
-    |-
-    (config) => ({ 
-      command: 'node', 
-      args: ['build/index.js'], 
-      env: { CONFIG: JSON.stringify(config) } 
-    })
-  exampleConfig:
-    license: "ABC-123-XYZ"
+type: stdio
+configSchema:
+  type: object
+  properties:
+    license:
+      type: string
+  required:
+    - license
+commandFunction: |
+  (config) => ({
+    command: ['node', 'dist/index.js'],
+    args: [],
+    env: {
+      LICENSE: config.license
+    }
+  })
