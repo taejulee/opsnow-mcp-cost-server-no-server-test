@@ -90,18 +90,28 @@ server.tool(
   }
 );
 
-// Start the server
 async function main() {
-  const args = process.argv.slice(2);
-  let license = "";
-  const licenseIndex = args.indexOf("--license");
-  if (licenseIndex !== -1 && args.length > licenseIndex + 1) {
-    license = args[licenseIndex + 1];
-    console.log("License key provided:", license);
-  } else {
-    console.error("Error: No license key provided. Server cannot start without a valid license.");
+  const configJson = process.env.CONFIG;
+  if (!configJson) {
+    console.error("Error: No configuration provided. Server cannot start without configuration.");
     process.exit(1);
   }
+
+  let config;
+  try {
+    config = JSON.parse(configJson);
+  } catch (error) {
+    console.error("Error: Invalid configuration JSON.", error);
+    process.exit(1);
+  }
+
+  const license = config.license;
+  if (!license) {
+    console.error("Error: No license key provided in configuration. Server cannot start without a valid license.");
+    process.exit(1);
+  }
+
+  console.log("License key provided:", license);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
