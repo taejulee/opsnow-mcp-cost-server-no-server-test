@@ -1,7 +1,7 @@
 {
   "name": "opsnow-mcp-cost-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/index.js",
   "bin": {
     "cost": "./build/index.js"
   },
@@ -10,7 +10,8 @@
     "start": "node --loader ts-node/esm src/index.ts"
   },
   "files": [
-    "build"
+    "build",
+    "data"
   ],
   "keywords": [],
   "author": "",
