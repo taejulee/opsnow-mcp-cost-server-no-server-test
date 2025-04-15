@@ -1,4 +1,6 @@
 # OpsNow MCP Cost Server
+[![smithery badge](https://smithery.ai/badge/@taejulee/opsnow-mcp-cost-server-no-server-test)](https://smithery.ai/server/@taejulee/opsnow-mcp-cost-server-no-server-test)
+
 
 ## 소개
 OpsNow MCP(Module Context Protocol) Cost Server는 Claude Desktop App과 같은 MCP Client에 OpsNow의 비용 데이터를 제공하는 서버입니다.
@@ -35,6 +37,15 @@ graph LR
 
 ## 설치 방법
 
+### Installing via Smithery
+
+To install OpsNow Cost Server Test for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@taejulee/opsnow-mcp-cost-server-no-server-test):
+
+```bash
+npx -y @smithery/cli install @taejulee/opsnow-mcp-cost-server-no-server-test --client claude
+```
+
+### Manual Installation
 ```bash
 # 저장소 클론
 git clone [repository-url]
