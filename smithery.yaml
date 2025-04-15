@@ -8,7 +8,7 @@ configSchema:
     - license
 commandFunction: |
   (config) => ({
-    command: ['node', 'dist/index.js'],
+    command: ['node', 'build/index.js'],
     args: [],
     env: {
       LICENSE: config.license
