@@ -4,6 +4,14 @@ import { z } from "zod";
 import path from "node:path";
 import * as dotenv from "dotenv";
 import { promises as fs } from 'fs';
+
+// Create server instance
+const server = new McpServer({
+  name: "cloud-cost",
+  version: "1.0.0",
+});
+
+// Load environment variables silently
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
 // Helper function for reading cost data from file
@@ -18,12 +26,6 @@ async function readCostData(): Promise<any | null> {
     return null;
   }
 }
-
-// Create server instance
-const server = new McpServer({
-  name: "cloud-cost",
-  version: "1.0.0",
-});
 
 server.tool(
   "get-cost",
@@ -92,30 +94,56 @@ server.tool(
 
 async function main() {
   const configJson = process.env.CONFIG;
+  
   if (!configJson) {
-    console.error("Error: No configuration provided. Server cannot start without configuration.");
+    process.stderr.write(JSON.stringify({
+      jsonrpc: "2.0",
+      error: {
+        code: -32603,
+        message: "No configuration provided"
+      }
+    }) + "\n");
     process.exit(1);
   }
 
   let config;
   try {
     config = JSON.parse(configJson);
-  } catch (error) {
-    console.error("Error: Invalid configuration JSON.", error);
+  } catch (err) {
+    const error = err as Error;
+    process.stderr.write(JSON.stringify({
+      jsonrpc: "2.0",
+      error: {
+        code: -32603,
+        message: "Invalid configuration JSON",
+        data: error.message
+      }
+    }) + "\n");
     process.exit(1);
   }
 
   const license = config.license;
   if (!license) {
-    console.error("Error: No license key provided in configuration. Server cannot start without a valid license.");
+    process.stderr.write(JSON.stringify({
+      jsonrpc: "2.0",
+      error: {
+        code: -32603,
+        message: "No license key provided"
+      }
+    }) + "\n");
     process.exit(1);
   }
 
-  console.log("License key provided:", license);
-
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Cloud Cost MCP Server running on stdio");
+  process.stderr.write(JSON.stringify({
+    jsonrpc: "2.0",
+    method: "log",
+    params: {
+      level: "info",
+      message: "Cloud Cost MCP Server running on stdio"
+    }
+  }) + "\n");
 }
 
 main().catch((error) => {
