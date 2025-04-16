@@ -6,7 +6,7 @@
     "cost": "./build/index.js"
   },
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\" && cp data/cost.json build/cost.json",
     "start": "node --loader ts-node/esm src/index.ts"
   },
   "files": [

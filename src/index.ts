@@ -17,7 +17,7 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 // Helper function for reading cost data from file
 async function readCostData(): Promise<any | null> {
   try {
-    const filePath = path.join(__dirname, "../data/cost.json");
+    const filePath = path.join(__dirname, "./cost.json");
     process.stderr.write(JSON.stringify({
       jsonrpc: "2.0",
       method: "log",
@@ -45,7 +45,7 @@ async function readCostData(): Promise<any | null> {
         message: "Error reading cost data from file",
         data: {
           error: error instanceof Error ? error.message : String(error),
-          filePath: path.join(__dirname, "../data/cost.json"),
+          filePath: path.join(__dirname, "./cost.json"),
           cwd: process.cwd(),
           __dirname
         }
@@ -66,7 +66,7 @@ server.tool(
 
     const data = await readCostData();
     if (!data || !data.Data) {
-      const filePath = path.join(__dirname, "../data/cost.json");
+      const filePath = path.join(__dirname, "./cost.json");
       const fileExists = await fs.access(filePath).then(() => true).catch(() => false);
       return {
         content: [
