@@ -167,6 +167,19 @@ async function main() {
     process.exit(1);
   }
 
+  // Validate license format
+  const licenseRegex = /^[A-Z]{3}-[A-Z]{3}-[A-Z]{4}$/;
+  if (!licenseRegex.test(license)) {
+    process.stderr.write(JSON.stringify({
+      jsonrpc: "2.0",
+      error: {
+        code: -32603,
+        message: "Invalid license format. License must be in XXX-DDD-YYYY format (e.g., ABC-DEF-GHIJ)"
+      }
+    }) + "\n");
+    process.exit(1);
+  }
+
   const transport = new StdioServerTransport();
   await server.connect(transport);
   process.stderr.write(JSON.stringify({
