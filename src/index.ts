@@ -11,13 +11,17 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
+//XXX-DDD-YYYY
+//GGG-AAA-KKKK
+
 // Load environment variables silently
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
 // Helper function for reading cost data from file
-async function readCostData(): Promise<any | null> {
+async function readCostData(license: string): Promise<any | null> {
   try {
-    const filePath = path.join(__dirname, "./cost.json");
+    const fileName = license === "XXX-DDD-YYYY" ? "cost.json" : "cost2.json";
+    const filePath = path.join(__dirname, `./${fileName}`);
     process.stderr.write(JSON.stringify({
       jsonrpc: "2.0",
       method: "log",
@@ -63,8 +67,45 @@ server.tool(
     months: z.array(z.string()).optional().describe("List of months in YYYY-MM format (e.g. ['2024-04', '2024-05'])"),
   },
   async ({ vendors, months }) => {
+    const configJson = process.env.CONFIG;
+    if (!configJson) {
+      return {
+        content: [
+          { 
+            type: "text", 
+            text: "No configuration provided" 
+          }
+        ],
+      };
+    }
 
-    const data = await readCostData();
+    let config;
+    try {
+      config = JSON.parse(configJson);
+    } catch (err) {
+      return {
+        content: [
+          { 
+            type: "text", 
+            text: "Invalid configuration JSON" 
+          }
+        ],
+      };
+    }
+
+    const license = config.license;
+    if (!license) {
+      return {
+        content: [
+          { 
+            type: "text", 
+            text: "No license key provided" 
+          }
+        ],
+      };
+    }
+
+    const data = await readCostData(license);
     if (!data || !data.Data) {
       const filePath = path.join(__dirname, "./cost.json");
       const fileExists = await fs.access(filePath).then(() => true).catch(() => false);
