@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/taejulee-opsnow-mcp-cost-server-no-server-test-badge.png)](https://mseep.ai/app/taejulee-opsnow-mcp-cost-server-no-server-test)
+
 # OpsNow MCP Cost Server
 
 ## 소개
